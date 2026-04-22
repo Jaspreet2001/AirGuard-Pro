@@ -1,6 +1,5 @@
 # 🛡️ AirGuard Pro — IoT-Based Hazardous Gas & Temperature Detection System
 
-![Project Banner](https://house-monitoring-1.onrender.com/)
 
 > **Real-time air quality monitoring, hazardous gas detection, and temperature sensing — powered by ESP32 with a live web dashboard.**
 
