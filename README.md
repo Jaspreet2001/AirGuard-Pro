@@ -8,7 +8,7 @@
 
 ## 📸 Project Hardware
 
-![AirGuard Pro Hardware Setup](https://raw.githubusercontent.com/yourusername/airguard-pro/main/assets/hardware.jpeg)
+![AirGuard Pro Hardware Setup](https://github.com/user-attachments/assets/a7ca4415-4042-4d44-9b3d-e06b2246445a)
 
 > *ESP32 microcontroller connected with MQ-2, MQ-135 gas sensors, DHT22 temperature & humidity sensor, and a buzzer alarm — mounted on a breadboard.*
 
