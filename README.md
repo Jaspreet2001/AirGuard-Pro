@@ -29,8 +29,17 @@ Monitor real-time air quality, AQI index, gas levels, and receive smart hazard a
 - [Hardware Components](#hardware-components)
 - [System Workflow](#system-workflow)
 - [Tech Stack](#tech-stack)
-- [Dashboard Features](#dashboard-features)
-- [How It Works](#how-it-works)
+- [Website Features — GasMonitor Pro](#️-website-features--gasmonitor-pro)
+  - [1. Secure Authentication](#-1-secure-authentication-system)
+  - [2. Real-Time Gas Monitoring](#-2-real-time-gas-monitoring)
+  - [3. Smart Alert System](#-3-smart-alert-system)
+  - [4. Dashboard Interface](#-4-dashboard-interface)
+  - [5. Backend Processing](#-5-backend-processing-nodejs-server)
+  - [6. Cloud Integration](#️-6-cloud-integration)
+  - [7. Live AQI Index](#-7-live-aqi-index)
+  - [8. Historical Trends](#-8-historical-data--trend-charts)
+- [Step-by-Step Operation](#-step-by-step-operation)
+- [How It Works](#-how-it-works)
 - [Setup & Installation](#setup--installation)
 - [Project Structure](#project-structure)
 - [Contributors](#contributors)
@@ -129,7 +138,7 @@ When gas levels exceed safe thresholds, the system **triggers a buzzer alarm** a
 
 ## 🖥️ Website Features — GasMonitor Pro
 
-The web dashboard **[GasMonitor Pro](https://house-monitoring-1.onrender.com/)** is the software interface of this project. Here's a detailed breakdown of every feature:
+The web dashboard **[GasMonitor Pro](https://house-monitoring-1.onrender.com/)** is the complete software interface of this project. It connects to the ESP32 hardware via Firebase and displays live environmental data in real time.
 
 ---
 
@@ -139,7 +148,7 @@ The dashboard is protected with an enterprise-grade authentication system:
 
 | Auth Feature | Details |
 |---|---|
-| **Email & Password Login** | Standard credential-based login with password strength indicator |
+| **Email & Password Login** | Standard credential-based login with live password strength indicator |
 | **Google OAuth** | One-click sign-in via Google account |
 | **GitHub OAuth** | Developer-friendly login via GitHub account |
 | **Sign Up / Register** | New user registration with full name, email, and password |
@@ -150,70 +159,198 @@ The dashboard is protected with an enterprise-grade authentication system:
 | **Zero Trust Security** | Every request is verified; no implicit trust granted |
 | **Session Security** | Sessions are securely managed and validated on each load |
 
-> The login page displays **"Session secure"** and **"Sensors Online"** status badges, confirming both security and hardware connectivity at a glance.
+> The login page displays **"Session secure"** and **"Sensors Online"** status badges — confirming both security and hardware connectivity at a glance before you even log in.
 
 ---
 
-### 📡 2. Real-Time Sensor Telemetry
+### 🔴 2. Real-Time Gas Monitoring
 
-Once logged in, the dashboard displays **live data** streamed directly from the ESP32:
+**What the user sees:**
+- A live value display showing gas level / sensor readings
+- Updates automatically — **no page refresh needed**
 
-- 🟠 **MQ-2 Combustible Gas Levels** — Real-time PPM values for LPG, methane, smoke, and flammable gases
-- 🟣 **MQ-135 Air Quality Data** — Continuous pollution readings for CO₂, NH₃, benzene, and harmful vapors
-- 🌡️ **DHT22 Temperature & Humidity** — Ambient temperature and humidity streamed live
+**How it works internally:**
 
-Data refreshes automatically — no page reload needed.
+```
+Sensor (ESP32) → Firebase Realtime Database → Node.js Server → Frontend UI
+```
 
----
+- Sensor/device sends data to **Firebase Realtime Database**
+- Backend (`server.js`) listens for database updates
+- Frontend subscribes using **Firebase SDK** event listeners
 
-### 📊 3. Live AQI Index (Air Quality Index)
+**Key concepts used:**
+```javascript
+// No polling — uses instant event listeners
+onValue(ref, callback)       // Listens for value changes
+onChildAdded(ref, callback)  // Listens for new entries
+```
 
-- Calculates a **real-time AQI score** based on MQ-135 sensor readings
-- Displays the **current air quality status** (Good / Moderate / Unhealthy / Hazardous)
-- Shows **historical trend charts** so you can track air quality over time
-- Helps users understand long-term pollution patterns in their environment
-
----
-
-### 🚨 4. Smart Hazard Alert System
-
-- Automatically **detects when gas levels exceed preset safety thresholds**
-- Triggers **instant alerts on the dashboard** when dangerous levels are detected
-- Works in sync with the **physical buzzer** on the ESP32 hardware
-- Alerts remain active until gas levels **return to safe range**
-- Designed for **immediate human response** in case of gas leaks or fire hazards
-
----
-
-### 📈 5. Historical Data & Trend Charts
-
-- Logs all sensor readings over time
-- Displays **graphical trend charts** for gas levels and temperature
-- Allows users to **analyze patterns** — e.g., recurring high CO₂ at certain hours
-- Helps in **predictive safety monitoring** over days/weeks
+- ✅ No polling → **instant updates in milliseconds**
+- ✅ MQ-2 → real-time PPM values for LPG, methane, smoke
+- ✅ MQ-135 → live pollution readings for CO₂, NH₃, benzene
+- ✅ DHT22 → ambient temperature and humidity streamed live
 
 ---
 
-### ☁️ 6. Cloud-Connected & Always-On
+### 🚨 3. Smart Alert System
 
-- **99.9% sensor uptime** — Dashboard always reflects current hardware status
-- ESP32 pushes data to cloud continuously via **Wi-Fi HTTP requests**
-- Dashboard is hosted on **Render.com** — accessible from any device, anywhere
-- **"Sensors Online"** badge confirms live ESP32 connection on the login screen itself
+**What the user sees:**
+- ⚠️ Warning message when gas exceeds safe threshold
+- 🔴 Color change on the dashboard (Green → Red)
+
+**Logic behind it:**
+```javascript
+if (gasLevel > threshold) {
+  triggerAlert();   // Visual alert on dashboard
+  activateBuzzer(); // Physical buzzer on ESP32
+}
+```
+
+**Types of alerts implemented:**
+| Alert Type | Details |
+|---|---|
+| ⚠️ **Visual Alert** | UI color change and warning banner on dashboard |
+| 🔔 **Console / Server Logs** | Logged in `server.js` for record keeping |
+| 📲 **Future Ready** | Architecture supports SMS / Email notifications |
+
+**Why it matters:**
+- Prevents dangerous situations — gas leaks, fire risk, toxic exposure
+- Alerts remain **active until gas returns to safe levels**
+- Works **in sync** with the physical buzzer on the ESP32 board
 
 ---
+
+### 📊 4. Dashboard Interface
+
+**UI Components present on the dashboard:**
+- 📟 **Live reading panel** — current gas levels, temperature, humidity
+- 🟢🔴 **Status indicator** — displays `SAFE` or `DANGER` state clearly
+- 📈 **Graphs / trend charts** — visual history of sensor readings
+- 🕐 **Timestamped logs** — every reading recorded with time
+
+**Behavior:**
+- Auto-refresh via **real-time Firebase sync**
+- Minimal latency — updates in **~milliseconds**
+- Designed for **quick-glance decisions** — no manual action needed
+- Fully responsive — works on desktop, tablet, and mobile
+
+---
+
+### ⚙️ 5. Backend Processing — Node.js Server
+
+**What `server.js` is doing:**
+
+```javascript
+// Core backend responsibilities
+const db = getDatabase(app);   // Initialize Firebase connection
+
+// Server handles:
+// 1. Firebase initialization
+// 2. Real-time database connection
+// 3. Serving frontend static files
+// 4. Processing live sensor updates
+// 5. Threshold comparison logic
+// 6. API endpoints for dashboard
+```
+
+**Full responsibilities:**
+| Task | Description |
+|---|---|
+| **Firebase Init** | Connects backend to Firebase Realtime Database |
+| **Static File Serving** | Serves the frontend HTML/CSS/JS dashboard |
+| **Real-time Updates** | Handles live sensor data as it arrives |
+| **Data Validation** | Ensures sensor values are within expected ranges |
+| **Threshold Checking** | Server-side check — triggers alert logic |
+| **API Endpoints** | Provides data endpoints consumed by the frontend |
+
+---
+
+### ☁️ 6. Cloud Integration
+
+**Services used:**
+
+| Service | Role |
+|---|---|
+| **Firebase Realtime Database** | Stores and streams live sensor data |
+| **Firebase Authentication** | Manages all user login & security |
+| **Render.com** | Hosts the Node.js backend + frontend dashboard |
+
+**Benefits of this cloud architecture:**
+- ✅ **No local server required** — everything runs in the cloud
+- ✅ **Accessible from anywhere** — open dashboard on any browser, any device
+- ✅ **Scalable** — Firebase scales automatically with usage
+- ✅ **Always-on** — 99.9% uptime with Render hosting
+- ✅ **"Sensors Online"** badge on login confirms live ESP32 connection
+
+---
+
+### 📊 7. Live AQI Index
+
+- Calculates a **real-time Air Quality Index (AQI)** score from MQ-135 readings
+- Displays the **current air quality category**:
+
+| AQI Range | Status |
+|---|---|
+| 0 – 50 | 🟢 Good |
+| 51 – 100 | 🟡 Moderate |
+| 101 – 150 | 🟠 Unhealthy for Sensitive Groups |
+| 151 – 200 | 🔴 Unhealthy |
+| 201+ | 🟣 Hazardous |
+
+---
+
+### 📈 8. Historical Data & Trend Charts
+
+- All sensor readings are **logged continuously** with timestamps
+- **Graphical trend charts** display gas levels and temperature over time
+- Users can **identify patterns** — e.g., CO₂ spike every morning at 8AM
+- Supports **predictive safety monitoring** over days and weeks
+- Charts help compare **before/after** ventilation or safety improvements
+
+---
+
+## 🧠 Step-by-Step Operation
+
+```
+1. ⚡ Power is supplied to the system
+        ↓
+2. ESP32 initializes all sensors
+        ↓
+3. Sensors start collecting environmental data:
+   MQ-2   → combustible gas detection (LPG, smoke, methane)
+   MQ-135 → air quality & pollution (CO₂, NH₃, benzene)
+   DHT22  → temperature & humidity
+        ↓
+4. ESP32 continuously reads & transmits data to Firebase
+        ↓
+5. System compares values with predefined safety thresholds
+        ↓
+6a. If SAFE  → ESP32 continues monitoring silently
+        ↓
+6b. If DANGER detected:
+   🚨 Buzzer activates on the device (hardware alert)
+   📊 Alert pushed to dashboard (software alert)
+   🔴 Dashboard turns red with warning message
+        ↓
+7. Monitoring continues until values return to safe range
+        ↓
+8. System auto-resets — buzzer stops, dashboard returns to green ✅
+```
 
 ---
 
 ## 🚀 How It Works
 
-1. **ESP32** reads sensor data every few seconds
-2. Data is sent over **Wi-Fi** to the cloud backend
-3. The **web dashboard** displays live readings, AQI, and alerts
-4. If readings cross **safety thresholds**:
-   - 🔔 Buzzer activates on the device
-   - 🚨 Alert is pushed to the dashboard
-5. System **auto-resets** when air quality returns to safe levels
+1. **ESP32** reads all sensor data every few seconds
+2. Data is sent over **Wi-Fi** to **Firebase Realtime Database**
+3. `server.js` (Node.js) listens for database changes using `onValue()`
+4. The **GasMonitor Pro dashboard** displays live readings, AQI, and status
+5. If readings cross **safety thresholds**:
+   - 🔔 Buzzer activates on the ESP32 hardware
+   - 🚨 Alert is pushed instantly to the web dashboard
+   - Dashboard changes from 🟢 Safe to 🔴 Danger state
+6. System **auto-resets** once air quality returns to safe levels
 
 ---
 
