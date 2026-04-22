@@ -385,41 +385,13 @@ https://house-monitoring-1.onrender.com/
 
 ---
 
-## 📁 Project Structure
 
-```
-airguard-pro/
-│
-├── firmware/
-│   ├── airguard_esp32.ino       # Main ESP32 firmware
-│   ├── config.h                 # Wi-Fi & API config
-│   └── sensors.h                # Sensor read functions
-│
-├── dashboard/
-│   ├── index.html               # Main dashboard UI
-│   ├── auth.js                  # Firebase authentication
-│   ├── sensors.js               # Real-time data fetch
-│   └── charts.js                # AQI & trend charts
-│
-├── assets/
-│   └── hardware.jpeg            # Hardware project photo
-│
-└── README.md
-```
-
----
 
 ## 👨‍💻 Contributors
 
-| Name | Role |
-|------|------|
-| Your Name | Hardware Design, Firmware, Dashboard |
+Jaspreet Kaur
 
 ---
-
-## 📄 License
-
-This project is licensed under the **MIT License** — feel free to use, modify, and distribute.
 
 ---
 
