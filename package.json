@@ -1,0 +1,27 @@
+{
+  "name": "gas-monitoring-website",
+  "version": "1.0.0",
+  "description": "A real-time gas monitoring dashboard with MQ2 and MQ135 sensors",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "gas-monitoring",
+    "sensor",
+    "dashboard",
+    "mq2",
+    "mq135"
+  ],
+  "author": "JASHANCHEEMA55",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.22.1",
+    "firebase": "^12.12.0",
+    "socket.io": "^4.8.3",
+    "twilio": "^6.0.0"
+  }
+}
