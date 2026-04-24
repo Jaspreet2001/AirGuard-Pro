@@ -47,7 +47,7 @@ Monitor real-time air quality, AQI index, gas levels, and receive smart hazard a
 
 ## 🔍 Overview
 
-**AirGuard Pro** is an IoT-based environmental safety system that continuously monitors:
+**HomeSecure AI** is an IoT-based environmental safety system that continuously monitors:
 - 🔥 **Combustible & flammable gases** (LPG, methane, smoke) via **MQ-2**
 - ☁️ **Air quality & pollution** (CO₂, NH₃, benzene) via **MQ-135**
 - 🌡️ **Temperature & humidity** via **DHT22**
