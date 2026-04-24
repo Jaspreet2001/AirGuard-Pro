@@ -15,7 +15,7 @@
 
 ## 🌐 Live Dashboard
 
-🔗 ** https://house-monitoring.onrender.com(https://house-monitoring.onrender.com/)**
+🔗 [Open Live Dashboard](https://house-monitoring.onrender.com/)
 
 Monitor real-time air quality, AQI index, gas levels, and receive smart hazard alerts — all from your browser.
 
